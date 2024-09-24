@@ -1,0 +1,160 @@
+---
+title: "Analyzing the Impact of Environmental Factors on Aquatic Biodiversity in Toronto"
+author: 
+  - Shuangyuan Yang
+thanks: "Code and data are available at: <https://github.com/Sophiaaa-Y/paper1_initial_submission.git>"
+date: 09-23-2024
+date-format: long
+abstract: "This report shows the relationships between wind speed, wave action, water turbidity, and their effects on waterfowl populations. The data from Toronto Beaches Observations shows how environmental variables influence water clarity and then affect waterfowls population. Results illustrate that higher wind speeds and wave actions increase value of turbidity, which negatively affects waterfowl populations because they prefer clearer waters. The findings emphasize the importance of maintaining optimal water conditions for supporting biodiversity under changing climatic conditions."
+format: pdf
+number-sections: true
+bibliography: references.bib
+---
+
+```{r}
+#| echo: false
+#| warning: false
+#### Preamble ####
+
+# Purpose: Generates a paper titled "Analyzing the Impact of Environmental Factors on Aquatic 
+# Biodiversity in Toronto" in PDF format when rendered.
+# Author: Shuangyuan Yang
+# Date: September 23, 2024
+# Contact: 2438862677@qq.com
+# Pre-requisites: Run the files "01-download_data.R" and "02-data_cleaning.R", and find 
+# some literature that is related to my topic. 
+```
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+#install.packages("tidyverse")
+#install.packages("opendatatoronto")
+#install.packages("ggplots")
+library(tidyverse)
+library(opendatatoronto)
+library(ggplot2)
+```
+
+
+# Introduction
+
+Understanding the relationships between environmental variables such as wind speed and turbidity, and their effects on waterfowl populations and aquatic ecosystems is critical for supporting wildlife survive and improve water resources, especially under changing climatic conditions. In Canada, wetlands and aquatic ecosystems, including the prairie pothole region [@withey2011effect], are important habitats for waterfowls, which also essential for supporting biodiversity. However, these habitats are very sensitive to climate changes and water quality, and need high level environmental conditions.
+
+There is a great number of literature talks about the increasing risks posed to wetlands and waterfowl caused by climate change, particularly in regions like the Canadian prairie pothole region, which is known as North America's "duck factory"[@withey2011effect]. These changes in the climatic factors will cause the negative influence the turbidity levels in aquatic environments and wetland areas, and become the direct threat to the food supply and breeding patterns, which is harmful to overall waterfowl species. 
+
+Moreover, turbidity that used to reflect the clarity of water is an important factor in measure waterfowl habitat quality, which is influenced by wave action and wind speed. Wind-driven waves can cause sediment suspension, which lead to an increasing in turbidity levels and reducing in water clarity. This will lower the availability of aquatic vegetation and food for waterfowl [@van2018turbidity]. Research shows that higher wind speeds causes greater wave action, which in turn disturbs sediments and increases turbidity, and then leading to less suitable conditions for waterfowl [@roig2012rainfall]. These disturbances can decrease availability of submerged plants that are so important and meaningful to waterfowl species.
+
+For doing this, Toronto Beaches Observations data [@tbodataset] from Open Data Toronto website [@opendatatorontocite] was firstly obtained as described in @sec-data-overview. According to this dataset, we can analyze the relationships between wind speed, wave action, turbidity, and waterfowl populations by using different graphing methods. Then, by analyzing, we get the impacts of different environmental factors on waterfowls population and behavior (@sec-data-results), providing a deeply understanding of the ecological consequences caused by changing environmental conditions. Understanding these dynamics is important for developing protection strategies to protect waterfowls population from the growing threats driven by climate change (@sec-discussion). As a summary, the structure of this paper is: @sec-data includes an overview of the data and the results; @sec-data-results is about the different relationships of different variables and get the result for analyzing; @sec-discussion includes a discussion of the results. 
+
+# Data {#sec-data}
+
+## Overview {#sec-data-overview}
+
+The dataset used in this analysis is the "Toronto Beaches Observations" [@tbodataset], which sourced from Open Data Toronto website [@opendatatorontocite] and the data was last updated on September 13, 2024. The dataset was collected to track how environmental factors, such as wind speed and turbidity of water, influence the waterfowl populations. These observations are made between mid May and mid September [@tbodataset] to capture changes under different conditions. As an open data resource, the data can be used in research and providing suggestions when making policies, particularly in managing water environment and protecting biodiversity under changing climate conditions.
+
+This dataset includes many different variables. The first one is "Wind Speed in km/h" and are called "windSpeed" in the raw dataset. This variable measures the speed of wind in km/h at different observation points. And the second variable "Waterfowl population", called "waterFowl" in the raw dataset, records the number of waterfowl observed in the water over time, offering data on how different environmental factors affect their populations. Then, the variable "Wave Action", called "waveAction" in the raw dataset, categorizes into 4 levels (e.g., high, moderate, low, none) excluding NA. NA means missing or undefined data of wave action. The last variable is "Turbidity of water (NTUs)", called "turbidity" in the raw dataset, indicates water clarity. Higher values representing more suspended particles in water [@tbodataset]. 
+
+The `R` programming language [@citeR] was used to process and analyze the data. The `tidyverse` [@welcometidyverse] package and the `opendatatoronto` [@opendatatorontocite] package are installed and library for data process and obtain data. And `ggplot2` [@useggplot2] is used for data visualization, showing the relationships between different variables. Besides, all relevant data was sourced from the website "Toronto Beaches Observations" [@tbodataset] from "Open Data Toronto" website [@opendatatorontocite], and get data by using library `opendatatoronto` [@opendatatorontocite]. 
+
+## Results {#sec-data-results}
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+
+#### Loading the Cleaned Dataset ####
+
+Observations_cleaned_data <- read_csv(here::here("outputs/data/cleaned_data.csv"))
+```
+
+After loading the dataset using the `R` programming language [@citeR] and the `opendatatoronto` package [@opendatatorontocite], the `ggplot2` [@useggplot2] package to generate graphs and show relationships. 
+
+\newpage
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-windspeed-vs-waveaction
+#| fig-cap: "Wave actions observed under different wind speed"
+
+#### First Graph ####
+
+# Boxplot of wind speed vs wave action
+ggplot(Observations_cleaned_data, aes(x = `Wind speed in km/h`, y = `Wave Action`, fill = `Wave Action`)) +
+  geom_boxplot() +
+  labs(title = "Wave actions observed under different wind speed",
+       x = "Wind speed (km/h)",
+       y = "Wave Action")
+```
+
+@fig-windspeed-vs-waveaction shows that higher wind speed leads to larger wave actions. When wave actions at high level, the median of wave action is around 20km/h speed of wind and most high wave actions gather between wind speed 10km/h and wind speed 25km/h. When there is the moderate wave actions, the median of wave action is around 15km/h speed of wind with most moderate wave actions falling within wind speed 10km/h to wind speed 20km/h. With low wave action, then median of wave action is about 10km/h speed of wind with most low wave actions falling within wind speed 5km/h to wind speed 15km/h. When there is no wave action, median of no wave action is around 15km/h speed of wind and most none wave action gather between wind speed 5km/h and wind speed 20km/h. 
+
+\newpage
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-waveaction-vs-turbidity
+#| fig-cap: "How the turbidity of water change with different wave actions"
+
+#### Second Graph ####
+
+# Scatter plot of wind speed vs turbidity
+ggplot(Observations_cleaned_data, aes(x = `Wave Action`, y = `Turbidity of water (NTUs)`)) +
+  geom_point(color = "red", alpha = 0.6) +
+  labs(title = "How the turbidity of water change with different wave actions",
+       x = "Wave Action",
+       y = "Turbidity (NTUs)")
+```
+
+@fig-waveaction-vs-turbidity illustrates that higher wave actions are associated with large value of turbidity of water. With high wave action, turbidity values range from near 0 NTUs to over 200 NTUs, indicating that strong waves cause significant disturbances in the water. In contrast, when wave action is low or moderate, turbidity levels remain lower but still show some variability. With these two levels of wave actions, most of values of turbidity are below 50 NTUs. Besides, when there is no wave action tend to be lower turbidity, even below 20 NTUs.
+
+\newpage
+
+```{r}
+#| echo: false
+#| warning: false
+#| label: fig-turbidity-vs-waterfowlpop
+#| fig-cap: "Number of waterfowls observed under different turbidity of water"
+
+#### Third Graph ####
+
+# Scatter plot of turbidity vs waterfowl population
+ggplot(Observations_cleaned_data, aes(x = `Turbidity of water (NTUs)`, y = `Waterfowl population`)) +
+  geom_point(alpha = 0.6, color = "purple") +
+  labs(title = "Number of waterfowls observed under different turbidity of water", 
+       x = "Turbidity (NTUs)", 
+       y = "Waterfowl population")
+```
+
+@fig-turbidity-vs-waterfowlpop illustrates that clearer waters are more benefit to waterfowl activity and higher value of water turbidity causes fewer number of waterfowl. According to the graph, it shows that the majority of waterfowl are observed when turbidity levels are low, particularly when turbidity is below 25 NTUs, the number of waterfowls is always around 250. As turbidity increases, the number of waterfowl decreases sharply, indicating that waterfowl may prefer clearer water environments where there is less suspended particulate matter.
+
+\newpage
+
+# Discussion {#sec-discussion}
+
+The section @sec-data-results shows the complex relationships between environmental factors and their impact on aquatic ecosystems by analyzing the data on wave actions, wind speed, turbidity, and waterfowl populations. According to @fig-windspeed-vs-waveaction, the data and result show that wind speed is a primary driver of wave action. Higher wind speeds lead to larger and more frequent waves, as the boxplot shows. This is meaningful to sediment suspension. Based on the graph @fig-waveaction-vs-turbidity, it shows that higher wave actions increase water turbidity, means that stronger waves disturb sediment more and reduce water clarity. This relationship is particularly critical in shallow water ecosystems where wave energy can significantly disturb sediment, affecting both water clarity and aquatic biodiversity. 
+
+Moreover, based on the scatter plot @fig-turbidity-vs-waterfowlpop, the graph shows that waterfowl populations tend to be higher in clearer waters, with sharp declines in populations as turbidity increases. This suggests that waterfowls are sensitive to changes in water clarity, which may due to the reduced visibility for foraging and lower availability of food sources such as submerged vegetation. Clearer water often means less disturbance and healthier habitats.  
+
+## Limitations
+
+Although we have these results and findings, there are still limitations. The biggest limitation is that the dataset only have a limited time. For example, these data is about the observations during warmer months(between mid May and mid September) [@tbodataset]. As a result, it cannot show how these relationships evolve throughout the year.
+
+\newpage
+
+\appendix
+
+# Appendix {#sec-Appendix}
+
+
+# Additional data details
+
+\newpage
+
+
+# References
